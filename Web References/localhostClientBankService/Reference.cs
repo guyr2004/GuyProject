@@ -31,6 +31,8 @@ namespace GuyProject.localhostClientBankService {
         
         private System.Threading.SendOrPostCallback HelloWorldOperationCompleted;
         
+        private System.Threading.SendOrPostCallback GetTransactionOperationCompleted;
+        
         private System.Threading.SendOrPostCallback PostBillServiceOperationCompleted;
         
         private bool useDefaultCredentialsSetExplicitly;
@@ -75,6 +77,9 @@ namespace GuyProject.localhostClientBankService {
         public event HelloWorldCompletedEventHandler HelloWorldCompleted;
         
         /// <remarks/>
+        public event GetTransactionCompletedEventHandler GetTransactionCompleted;
+        
+        /// <remarks/>
         public event PostBillServiceCompletedEventHandler PostBillServiceCompleted;
         
         /// <remarks/>
@@ -105,31 +110,54 @@ namespace GuyProject.localhostClientBankService {
         }
         
         /// <remarks/>
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetTransaction", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public TransactionDetails GetTransaction() {
+            object[] results = this.Invoke("GetTransaction", new object[0]);
+            return ((TransactionDetails)(results[0]));
+        }
+        
+        /// <remarks/>
+        public void GetTransactionAsync() {
+            this.GetTransactionAsync(null);
+        }
+        
+        /// <remarks/>
+        public void GetTransactionAsync(object userState) {
+            if ((this.GetTransactionOperationCompleted == null)) {
+                this.GetTransactionOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetTransactionOperationCompleted);
+            }
+            this.InvokeAsync("GetTransaction", new object[0], this.GetTransactionOperationCompleted, userState);
+        }
+        
+        private void OnGetTransactionOperationCompleted(object arg) {
+            if ((this.GetTransactionCompleted != null)) {
+                System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
+                this.GetTransactionCompleted(this, new GetTransactionCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
+            }
+        }
+        
+        /// <remarks/>
         [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/PostBillService", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public string PostBillService(string phoneNumberPay, string payee, decimal amount, string phoneNumberGet) {
+        public string PostBillService(TransactionDetails transactionDetails, decimal amount) {
             object[] results = this.Invoke("PostBillService", new object[] {
-                        phoneNumberPay,
-                        payee,
-                        amount,
-                        phoneNumberGet});
+                        transactionDetails,
+                        amount});
             return ((string)(results[0]));
         }
         
         /// <remarks/>
-        public void PostBillServiceAsync(string phoneNumberPay, string payee, decimal amount, string phoneNumberGet) {
-            this.PostBillServiceAsync(phoneNumberPay, payee, amount, phoneNumberGet, null);
+        public void PostBillServiceAsync(TransactionDetails transactionDetails, decimal amount) {
+            this.PostBillServiceAsync(transactionDetails, amount, null);
         }
         
         /// <remarks/>
-        public void PostBillServiceAsync(string phoneNumberPay, string payee, decimal amount, string phoneNumberGet, object userState) {
+        public void PostBillServiceAsync(TransactionDetails transactionDetails, decimal amount, object userState) {
             if ((this.PostBillServiceOperationCompleted == null)) {
                 this.PostBillServiceOperationCompleted = new System.Threading.SendOrPostCallback(this.OnPostBillServiceOperationCompleted);
             }
             this.InvokeAsync("PostBillService", new object[] {
-                        phoneNumberPay,
-                        payee,
-                        amount,
-                        phoneNumberGet}, this.PostBillServiceOperationCompleted, userState);
+                        transactionDetails,
+                        amount}, this.PostBillServiceOperationCompleted, userState);
         }
         
         private void OnPostBillServiceOperationCompleted(object arg) {
@@ -159,6 +187,99 @@ namespace GuyProject.localhostClientBankService {
     }
     
     /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.9032.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
+    public partial class TransactionDetails {
+        
+        private int transactionIDField;
+        
+        private System.DateTime datePostedField;
+        
+        private int amountField;
+        
+        private string payeeField;
+        
+        private string phonePayMoneyField;
+        
+        private string transactionStatusField;
+        
+        private string phoneGetMoneyField;
+        
+        /// <remarks/>
+        public int TransactionID {
+            get {
+                return this.transactionIDField;
+            }
+            set {
+                this.transactionIDField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public System.DateTime DatePosted {
+            get {
+                return this.datePostedField;
+            }
+            set {
+                this.datePostedField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public int Amount {
+            get {
+                return this.amountField;
+            }
+            set {
+                this.amountField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string Payee {
+            get {
+                return this.payeeField;
+            }
+            set {
+                this.payeeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string PhonePayMoney {
+            get {
+                return this.phonePayMoneyField;
+            }
+            set {
+                this.phonePayMoneyField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string TransactionStatus {
+            get {
+                return this.transactionStatusField;
+            }
+            set {
+                this.transactionStatusField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public string PhoneGetMoney {
+            get {
+                return this.phoneGetMoneyField;
+            }
+            set {
+                this.phoneGetMoneyField = value;
+            }
+        }
+    }
+    
+    /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9032.0")]
     public delegate void HelloWorldCompletedEventHandler(object sender, HelloWorldCompletedEventArgs e);
     
@@ -180,6 +301,32 @@ namespace GuyProject.localhostClientBankService {
             get {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9032.0")]
+    public delegate void GetTransactionCompletedEventHandler(object sender, GetTransactionCompletedEventArgs e);
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.8.9032.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class GetTransactionCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+        
+        private object[] results;
+        
+        internal GetTransactionCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) : 
+                base(exception, cancelled, userState) {
+            this.results = results;
+        }
+        
+        /// <remarks/>
+        public TransactionDetails Result {
+            get {
+                this.RaiseExceptionIfNecessary();
+                return ((TransactionDetails)(this.results[0]));
             }
         }
     }

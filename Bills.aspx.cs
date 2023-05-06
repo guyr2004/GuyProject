@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using GuyProject.App_Code;
 
 namespace GuyProject
 {
@@ -22,17 +23,18 @@ namespace GuyProject
 
         protected void ButtonPay_Click(object sender, EventArgs e)
         {
-            string phonepay = (string)Session["phone"];
-            string phoneget = this.TextBoxPhoneGet.Text;
+            localhostClientBankService.ClientBankService clientBankService = new localhostClientBankService.ClientBankService();
+            GuyProject.localhostClientBankService.TransactionDetails transactionDetails = new GuyProject.localhostClientBankService.TransactionDetails();
+            transactionDetails.PhonePayMoney = (string)Session["phone"];
+            transactionDetails.PhoneGetMoney = this.TextBoxPhoneGet.Text;
             Decimal amount;
             if (Decimal.TryParse(this.TextBoxAmount.Text, out amount))
             {
-                string payee = this.TextBoxPayee.Text;
-                localhostClientBankService.ClientBankService clientBankService = new localhostClientBankService.ClientBankService();
+                transactionDetails.Payee = this.TextBoxPayee.Text;
                 try
                 {
                     this.LabelMessage.Visible = true;
-                    this.LabelMessage.Text = clientBankService.PostBillService(phonepay, payee, amount, phoneget);
+                    this.LabelMessage.Text = clientBankService.PostBillService(transactionDetails, amount);
                 }
                 catch (Exception ex)
                 {
