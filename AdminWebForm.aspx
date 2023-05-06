@@ -48,14 +48,14 @@
         <p>
             <asp:GridView ID="GridViewTeachersNotAprrove" runat="server" AutoGenerateColumns="False" CssClass="auto-style1" OnRowCancelingEdit="GridViewTeachersNotAprrove_RowCancelingEdit" OnRowEditing="GridViewTeachersNotAprrove_RowEditing" OnRowUpdating="GridViewTeachersNotAprrove_RowUpdating">
                 <Columns>
-                    <asp:BoundField DataField="TeacherID" HeaderText="תעודת זהות" ReadOnly="True" Visible="True" />
+                    <asp:BoundField DataField="TeacherID" HeaderText="תעודת זהות" ReadOnly="True" Visible="False" />
                     <asp:BoundField DataField="FirstName" HeaderText="שם פרטי" ReadOnly="True" />
                     <asp:BoundField DataField="LastName" HeaderText="שם משפחה" ReadOnly="True" />
                     <asp:BoundField DataField="Phone" HeaderText="מספר טלפון" ReadOnly="True" />
                     <asp:BoundField DataField="Gender" HeaderText="מגדר" ReadOnly="True" />
                     <asp:BoundField DataField="BirthDate" HeaderText="תאריך לידה" DataFormatString="{0:dd/MM/yyyy}" ReadOnly="True" />
-                    <asp:BoundField DataField="Address" HeaderText="כתובת" ReadOnly="True" />
-                    <asp:BoundField DataField="CityName" HeaderText="עיר" ReadOnly="True" />
+                    <asp:BoundField DataField="Address" HeaderText="כתובת" ReadOnly="True" Visible="False" />
+                    <asp:BoundField DataField="CityName" HeaderText="עיר" ReadOnly="True" Visible="False" />
                     <asp:TemplateField HeaderText="סטטוס">
                         <EditItemTemplate>
                             <asp:DropDownList ID="DropDownListStatus" runat="server" AutoPostBack="True" Text='<%# Bind("Status") %>'>
@@ -73,9 +73,9 @@
                             </asp:DropDownList>
                         </ItemTemplate>--%>
                     </asp:TemplateField>
-                    <asp:BoundField DataField="LearnPlace" HeaderText="מקום למידה" ReadOnly="True" />
+                    <asp:BoundField DataField="LearnPlace" HeaderText="מקום למידה" ReadOnly="True" Visible="False" />
                     <asp:BoundField DataField="UserType" HeaderText="סוג משתמש" ReadOnly="True" />
-                    <asp:BoundField DataField="Email" HeaderText="אימייל" ReadOnly="True" />
+                    <asp:BoundField DataField="Email" HeaderText="אימייל" ReadOnly="True" Visible="False" />
                     <asp:BoundField DataField="Description" HeaderText="תיאור" ReadOnly="True" />
                     <asp:ImageField DataImageUrlField="ImageTeacher" HeaderText="תמונה" ReadOnly="True">
                     </asp:ImageField>
