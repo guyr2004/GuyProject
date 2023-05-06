@@ -1,0 +1,58 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="GuyProject.Site" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>
+        <asp:ContentPlaceHolder ID="title" runat="server">
+        </asp:ContentPlaceHolder>
+    </title>
+    <link href="~/Styles/mainstylesheet.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="wrapper">
+            <div id="myMenu" class="menu" dir="rtl" runat="server">
+                <ul id="menuList">
+                    <%=protectedLink %>
+                    <li><a href='Account.aspx'>התחבר לחשבון שלי</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+            <div class="content">
+                <asp:ContentPlaceHolder ID="body" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+            <div class="clear"></div>
+            <div class="footer">
+                <h2>Rotenberg.guy@gmail.com</h2>
+            </div>
+        </div>
+    </form>
+</body>
+<%--<body>
+    <form id="form1" runat="server">
+        <div class="wrapper">
+            <div id="myMenu" class="menu" dir="rtl" runat="server">
+                <ul id="menuList">
+                    <li><a href="HomePage.aspx">דף הבית</a></li>
+                    <li><a href="Register.aspx">הרשמה</a></li>
+                    <li><a href="Login.aspx">התחברות</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+            <div class="content">
+                <asp:ContentPlaceHolder ID="body" runat="server">
+                </asp:ContentPlaceHolder>
+            </div>
+            <div class="clear"></div>
+            <div class="footer">
+                <h2>Rotenberg.guy@gmail.com</h2>
+            </div>
+        </div>
+    </form>
+</body>--%>
+</html>

@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GuyProject.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GuyProject_localhostBankService_BankService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://localhost:44318/BankService.asmx</Value>
+    </Setting>
+    <Setting Name="GuyProject_localhostClientBankService_ClientBankService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://localhost:44318/ClientBankService.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

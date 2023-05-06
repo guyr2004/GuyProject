@@ -1,0 +1,129 @@
+﻿/* reset styles */
+body, div, p, ul, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, form, fieldset, textarea, p {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* body styles */
+body {
+    background-color: rgb(237, 237, 237);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+/* wrapper styles */
+.wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* content styles */
+.content {
+    background-color: rgb(254, 254, 254);
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 5px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    min-height: 400px;
+}
+
+/* menu styles */
+.menu {
+    background-color: rgb(10, 110, 178);
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    color: rgb(243, 243, 243);
+    border-radius: 5px;
+    direction: rtl;
+}
+
+/* navigation styles */
+.navigation_first_item {
+    border-radius: 5px 0 0 5px;
+}
+
+.navigation_s {
+    border-right: 1px solid rgb(10, 85, 125);
+    border-left: 1px solid rgb(67, 153, 200);
+    background-color: rgb(14, 79, 114);
+}
+
+/* menu styles */
+.menu {
+    background-color: rgb(10, 110, 178);
+    margin: 0;
+    padding: 0;
+    height: 40px;
+    color: rgb(243, 243, 243);
+    border-radius: 5px;
+}
+
+/* navigation styles */
+.navigation_first_item {
+    border-radius: 5px 0 0 5px;
+}
+
+.navigation_s {
+    border-right: 1px solid rgb(10, 85, 125);
+    border-left: 1px solid rgb(67, 153, 200);
+    background-color: rgb(14, 79, 114);
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    direction: rtl; /* Add this line */
+}
+
+    .menu ul li {
+        display: inline-block;
+        border-right: 1px solid rgb(10, 85, 125);
+        border-left: 1px solid rgb(67, 153, 200);
+    }
+
+        .menu ul li .navigation_first_item:hover {
+            border-radius: 5px 0 0 5px;
+        }
+
+        .menu ul li a {
+            font-size: 13px;
+            font-weight: bold;
+            line-height: 40px;
+            padding: 8px 20px;
+            color: rgb(255, 255, 255);
+            text-decoration: none;
+        }
+
+        .menu ul li:hover {
+            background-color: rgb(14, 79, 114);
+            border-right: 1px solid rgb(14, 89, 130);
+        }
+
+
+        
+
+/* clear fix */
+.clear {
+    clear: both;
+}
+
+/* footer styles */
+.footer {
+    height: 50px;
+    background-color: rgb(10, 110, 178);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+}
+
+    .footer h2 {
+        padding: 15px;
+        text-align: center;
+    }
+
+.menu {
+    direction: rtl;
+}

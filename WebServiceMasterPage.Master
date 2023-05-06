@@ -1,0 +1,29 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="WebServiceMasterPage.master.cs" Inherits="GuyProject.WebServiceMasterPage" %>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        <title>My Web Page</title>
+    </asp:ContentPlaceHolder>
+    <link href="Styles/WebServiceStyle.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div class="header">
+        </div>
+        <div class="menu">
+            <ul>
+                 <li><a href='HomePage.aspx'>דף הבית</a></li>
+                 <%=protectedLink %>
+            </ul>
+        </div>
+        <div class="content">
+            <asp:ContentPlaceHolder ID="mainContent" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+        <div class="footer">
+        </div>
+    </form>
+</body>
+</html>
