@@ -58,6 +58,10 @@ namespace GuyProject.App_Code
             objParam.Direction = ParameterDirection.Input;
             objParam.Value = lessonsDetails.PricePerHour;
 
+            objParam = myCommand.Parameters.Add("PaymentStatus", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = lessonsDetails.PaymentStatus;
+
             int rowAffecteed = 0;
             try
             {
