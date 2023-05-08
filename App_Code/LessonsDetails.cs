@@ -17,6 +17,7 @@ namespace GuyProject.App_Code
         private string _address;
         private string _status;
         private int _pricePerHour;
+        private string _paymentStatus;
 
         public string LessonID
         {
@@ -68,11 +69,18 @@ namespace GuyProject.App_Code
             get { return this._pricePerHour; }
             set { this._pricePerHour = value; }
         }
+
+        public string PaymentStatus
+        {
+            get { return this._paymentStatus; }
+            set { this._paymentStatus = value; }
+        }
+
         public LessonsDetails()
         {
 
         }
-        public LessonsDetails(string lessonID, DateTime lessonDate, TimeSpan starthour, string teacherID, string studentID, int subjectID, int levelID, string address, string status,int priceperhour)
+        public LessonsDetails(string lessonID, DateTime lessonDate, TimeSpan starthour, string teacherID, string studentID, int subjectID, int levelID, string address, string status,int priceperhour, string paymentStatus)
         {
             this._lessonID = lessonID;
             this.LessonDate = lessonDate;
@@ -84,6 +92,7 @@ namespace GuyProject.App_Code
             this._address = address;
             this._status = status;
             this._pricePerHour = priceperhour;
+            this._paymentStatus = paymentStatus;
         }
     }
 }
