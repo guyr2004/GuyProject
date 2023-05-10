@@ -140,6 +140,7 @@
     <Compile Include="App_Code\AbsenceTeacherService.cs" />
     <Compile Include="App_Code\LessonsDetails.cs" />
     <Compile Include="App_Code\LessonService.cs" />
+    <Compile Include="App_Code\LessonsList.cs" />
     <Compile Include="App_Code\WorkingDetails.cs" />
     <Compile Include="App_Code\WorkingService.cs" />
     <Compile Include="Bills.aspx.cs">
