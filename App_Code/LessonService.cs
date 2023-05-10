@@ -259,5 +259,57 @@ namespace GuyProject.App_Code
                 myConnection.Close();
             }
         }
+        public LessonsDetails GetLesson(DateTime datelesson, TimeSpan starthour, string teacherID, string studentID)
+        {
+            OleDbCommand myCommand = new OleDbCommand("GetLessonByDetails", myConnection);
+            myCommand.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = myCommand.Parameters.Add("@LessonDate", OleDbType.Date);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = datelesson;
+
+            objParam = myCommand.Parameters.Add("@StartHour", OleDbType.DBTime);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = starthour;
+
+            objParam = myCommand.Parameters.Add("@TeacherID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = teacherID;
+
+            objParam = myCommand.Parameters.Add("@StudentID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = studentID;
+
+            LessonsDetails lessonsDetails = null;
+            try
+            {
+                myConnection.Open();
+                OleDbDataReader reader = myCommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    lessonsDetails = new LessonsDetails();
+                    lessonsDetails.LessonDate = datelesson;
+                    lessonsDetails.StartHour = starthour;
+                    lessonsDetails.TeacherID = reader["TeacherID"].ToString();
+                    lessonsDetails.StudentID = reader["StudentID"].ToString();
+                    lessonsDetails.SubjectID  = int.Parse(reader["SubjectID"].ToString());
+                    lessonsDetails.LevelID = int.Parse(reader["LevelID"].ToString());
+                    lessonsDetails.Address = reader["Address"].ToString();
+                    lessonsDetails.Status = reader["Status"].ToString();
+                    lessonsDetails.PricePerHour = int.Parse(reader["PricePerHour"].ToString());
+                    lessonsDetails.PaymentStatus = reader["PaymentStatus"].ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+            return lessonsDetails;
+        }
     }
 }
