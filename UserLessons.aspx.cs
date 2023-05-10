@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,24 +14,88 @@ namespace GuyProject
 {
     public partial class UserLessons : System.Web.UI.Page
     {
+        LessonsList lessonsList = new LessonsList();
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["studentID"] != null)
+           
+            if (Session["studentID"] != null && !Page.IsPostBack)
+            {
                 Session["userID"] = Session["studentID"];
-            if (Session["teacherID"] != null)
+                this.DropDownListTeachers.Visible = true;
+                Populate_DropDownListTeachers();
+                this.DropDownListStudents.Visible = false;
+            }
+            if (Session["teacherID"] != null && !Page.IsPostBack)
+            {
                 Session["userID"] = Session["teacherID"];
+                this.DropDownListStudents.Visible = true;
+                Populate_DropDownListStudents();
+                this.DropDownListTeachers.Visible = false;
+            }
+            if (Session["teacherID"] != null && Session["studentID"] != null && !Page.IsPostBack)
+            {
+                this.DropDownListTeachers.Visible = true;
+                this.DropDownListStudents.Visible = true;
+                Populate_DropDownListStudents();
+                Populate_DropDownListTeachers();
+            }
             if (Session["userID"] == null)
             {
                 Session["page"] = "UserLessons.aspx";
                 Response.Redirect("Login.aspx");
             }
+            LessonService lessonService = new LessonService();
+            DataSet dataSetUserLessons = lessonService.GetAllLessonsByUserID((string)Session["userID"]);
+            Session["dataSetLessons"] = dataSetUserLessons;
             if (!Page.IsPostBack)
             {
                 Populate_GridViewShowLessons();
                 this.LabelDeleteMessage.Visible = false;
             }
         }
+        public static DateTime ParseDateString(string dateString)
+        {
+            string[] formatStrings = new string[]
+            {
+        "dd/MM/yyyy HH:mm:ss",
+        "dd/MM/yyyy H:mm:ss",
+        "dd/MM/yyyy HH:mm",
+        "dd/MM/yyyy H:mm",
+        "dd/MM/yyyy"
+            };
 
+            foreach (string formatString in formatStrings)
+            {
+                if (DateTime.TryParseExact(dateString, formatString, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime))
+                {
+                    return dateTime;
+                }
+            }
+
+            throw new ArgumentException("Invalid date string format.");
+        }
+        private void Populate_DropDownListTeachers()
+        {
+            LessonService lessonService = new LessonService();
+            DataSet dataSetTeachersName = new DataSet();
+            dataSetTeachersName = lessonService.GetAllTeachersNameByStudentID((string)Session["studentID"]);
+            this.DropDownListTeachers.DataSource = dataSetTeachersName.Tables["TeachersName"];
+            this.DropDownListTeachers.DataTextField = "Name";
+            this.DropDownListTeachers.DataValueField = "Name";
+            this.DropDownListTeachers.DataBind();
+            this.DropDownListTeachers.Items.Insert(0, new ListItem("בחר מורה", "בחר מורה"));
+        }
+        private void Populate_DropDownListStudents()
+        {
+            LessonService lessonService = new LessonService();
+            DataSet dataSetStudentsName = new DataSet();
+            dataSetStudentsName = lessonService.GetAllStudentsNameByTeacherID((string)Session["teacherID"]);
+            this.DropDownListStudents.DataSource = dataSetStudentsName.Tables["StudentsName"];
+            this.DropDownListStudents.DataTextField = "Name";
+            this.DropDownListStudents.DataValueField = "Name";
+            this.DropDownListStudents.DataBind();
+            this.DropDownListStudents.Items.Insert(0, new ListItem("בחר תלמיד", "בחר תלמיד"));
+        }
         public DateTime ConvertStringToDateTime(string timeString)
         {
             DateTime result;
@@ -43,15 +108,18 @@ namespace GuyProject
                 throw new FormatException("Invalid time string format.");
             }
         }
-        protected DataTable GetData()
+        protected DataTable GetData(DataSet dataSetUserLessons)
         {
             UserService userService = new UserService();
             SubjectsLevelsService subjectsLevelsService = new SubjectsLevelsService();
             LessonService lessonService = new LessonService();
             UserDetails studentDetails = new UserDetails();
             UserDetails TeacherDetails = new UserDetails();
-            DataSet dataSetUserLessons = lessonService.GetAllLessonsByUserID((string)Session["userID"]);
             DataTable dataTableUserLessons = dataSetUserLessons.Tables["UserLessons"];
+            if (dataTableUserLessons == null)
+            {
+                dataTableUserLessons = dataSetUserLessons.Tables["Table1"];
+            }
             dataTableUserLessons.Columns.Add("TeacherName");
             dataTableUserLessons.Columns.Add("StudentName");
             dataTableUserLessons.Columns.Add("TeacherPhone");
@@ -75,12 +143,17 @@ namespace GuyProject
         }
         protected void Populate_GridViewShowLessons()
         {
-            this.GridViewShowLessons.DataSource = GetData();
+            this.GridViewShowLessons.DataSource = GetData((DataSet)Session["dataSetLessons"]);
+            this.GridViewShowLessons.DataBind();
+        }
+        protected void Populate_GridViewLessonsToPay(DataSet dataSet)
+        {
+            this.GridViewShowLessons.DataSource = GetData(dataSet);
             this.GridViewShowLessons.DataBind();
         }
         protected void GridViewShowLessons_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            DataTable dataTable = GetData();
+            DataTable dataTable = GetData((DataSet)Session["dataSetLessons"]);
             try
             {
                 LessonsDetails lessonsDetails = new LessonsDetails();
@@ -114,7 +187,7 @@ namespace GuyProject
         }
         protected void ButtonDeleteLastLessons_Click(object sender, EventArgs e)
         {
-            DataTable dataTable = GetData();
+            DataTable dataTable = GetData((DataSet)Session["dataSetLessons"]);
             try
             {
                 LessonsDetails lessonsDetails = new LessonsDetails();
@@ -138,6 +211,96 @@ namespace GuyProject
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        protected void DropDownListTeachers_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataTable dataTableLessons = GetData((DataSet)Session["dataSetLessons"]);
+            DataView view = dataTableLessons.DefaultView;
+            string selectedvalue = this.DropDownListTeachers.SelectedValue;
+            view.RowFilter = "TeacherName = '" + selectedvalue + "'";
+            this.GridViewShowLessons.DataSource = view;
+            this.GridViewShowLessons.DataBind();
+            if (selectedvalue == "בחר מורה")
+            {
+                Populate_GridViewShowLessons();
+            }
+        }
+        protected void DropDownListStudents_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataTable dataTableLessons = GetData((DataSet)Session["dataSetLessons"]);
+            DataView view = dataTableLessons.DefaultView;
+            string selectedvalue = this.DropDownListStudents.SelectedValue;
+            view.RowFilter = "StudentName = '" + selectedvalue + "'";
+            this.GridViewShowLessons.DataSource = view;
+            this.GridViewShowLessons.DataBind();
+            if (selectedvalue == "בחר תלמיד")
+            {
+                Populate_GridViewShowLessons();
+            }
+        }
+        public DataSet ConvertArrayListToDataSet(ArrayList arrayList)
+        {
+            // Create a new DataTable
+            DataTable dataTable = new DataTable();
+
+            // Add columns to the DataTable
+            dataTable.Columns.Add("LessonID", typeof(string));
+            dataTable.Columns.Add("LessonDate", typeof(DateTime));
+            dataTable.Columns.Add("StartHour", typeof(TimeSpan));
+            dataTable.Columns.Add("TeacherID", typeof(string));
+            dataTable.Columns.Add("StudentID", typeof(string));
+            dataTable.Columns.Add("SubjectID", typeof(int));
+            dataTable.Columns.Add("LevelID", typeof(int));
+            dataTable.Columns.Add("Address", typeof(string));
+            dataTable.Columns.Add("Status", typeof(string));
+            dataTable.Columns.Add("PricePerHour", typeof(int));
+            dataTable.Columns.Add("PaymentStatus", typeof(string));
+
+            // Add rows to the DataTable
+            foreach (LessonsDetails lesson in arrayList)
+            {
+                DataRow dataRow = dataTable.NewRow();
+                dataRow["LessonID"] = lesson.LessonID;
+                dataRow["LessonDate"] = lesson.LessonDate;
+                dataRow["StartHour"] = lesson.StartHour;
+                dataRow["TeacherID"] = lesson.TeacherID;
+                dataRow["StudentID"] = lesson.StudentID;
+                dataRow["SubjectID"] = lesson.SubjectID;
+                dataRow["LevelID"] = lesson.LevelID;
+                dataRow["Address"] = lesson.Address;
+                dataRow["Status"] = lesson.Status;
+                dataRow["PricePerHour"] = lesson.PricePerHour;
+                dataRow["PaymentStatus"] = lesson.PaymentStatus;
+                dataTable.Rows.Add(dataRow);
+            }
+
+            // Create a new DataSet and add the DataTable to it
+            DataSet dataSet = new DataSet();
+            dataSet.Tables.Add(dataTable);
+
+            // Return the DataSet
+            return dataSet;
+        }
+
+        protected void GridViewShowLessons_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Pay")
+            {
+                UserService userService = new UserService();
+                LessonsDetails lessonsDetails = new LessonsDetails();
+                LessonService lessonService = new LessonService();
+                int index = Convert.ToInt32(e.CommandArgument);
+                GridViewRow row = this.GridViewShowLessons.Rows[index];
+                lessonsDetails.LessonDate = ParseDateString(row.Cells[9].Text);
+                lessonsDetails.StartHour = DateTime.ParseExact(row.Cells[8].Text, "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                lessonsDetails.TeacherID = userService.GetUserIDByPhoneNumber(row.Cells[6].Text);
+                lessonsDetails.StudentID = userService.GetUserIDByPhoneNumber(row.Cells[4].Text);
+                lessonsDetails = lessonService.GetLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID);
+                lessonsList.AddLesson(lessonsDetails);
+                Session["myLessons"] = lessonsList;
+                DataSet dataSet = ConvertArrayListToDataSet(lessonsList.lessonsList);
+                Populate_GridViewLessonsToPay(dataSet);
             }
         }
     }

@@ -8,29 +8,53 @@
             direction: rtl;
             float: right;
         }
+
+        #DropDownListTeachers {
+            text-align: center;
+            display: inline-block;
+            float: right;
+        }
+
+        #DropDownListStudents {
+            text-align: center;
+            display: inline-block;
+            float: right;
+        }
+
+        #separate {
+            border: 1px solid black;
+            margin: 20px 0;
+        }
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server">
-    <h1>UserDetails</h1>
+    <h1>UserLessons</h1>
     <br />
     <br />
     <center>
         <h2>כאן תוכל לראות את כל השיעורים שנקבעו לך</h2>
         <h6>חשוב להדגיש: כי אורך כל שיעור הוא כשעה אחת בלבד</h6>
+        <asp:DropDownList ID="DropDownListTeachers" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownListTeachers_SelectedIndexChanged">
+        </asp:DropDownList>
         <br />
-        <asp:GridView ID="GridViewShowLessons" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridViewShowLessons_RowDeleting">
+        <br />
+        <asp:DropDownList ID="DropDownListStudents" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownListStudents_SelectedIndexChanged"></asp:DropDownList>
+        <br />
+        <asp:GridView ID="GridViewShowLessons" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridViewShowLessons_RowDeleting" OnRowCommand="GridViewShowLessons_RowCommand">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" />
-                <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" />
-                <asp:BoundField HeaderText="מקום השיעור" DataField="Address" />
-                <asp:BoundField HeaderText="מספר טלפון תלמיד" DataField="StudentPhone" />
-                <asp:BoundField HeaderText="שם התלמיד" DataField="StudentName" />
-                <asp:BoundField HeaderText="מספר טלפון מורה" DataField="TeacherPhone" />
-                <asp:BoundField HeaderText="שם המורה" DataField="TeacherName" />
-                <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" />
-                <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" />
+                <asp:BoundField DataField="PaymentStatus" HeaderText="סטטוס תשלום" ReadOnly="True" />
+                <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" ReadOnly="True" />
+                <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" ReadOnly="True" />
+                <asp:BoundField HeaderText="מקום השיעור" DataField="Address" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון תלמיד" DataField="StudentPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם התלמיד" DataField="StudentName" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון מורה" DataField="TeacherPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם המורה" DataField="TeacherName" ReadOnly="True" />
+                <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" ReadOnly="True" />
+                <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
                 <asp:CommandField ButtonType="Button" DeleteText="מחק" ShowCancelButton="False" ShowDeleteButton="True" />
+                <asp:ButtonField ButtonType="Button" CommandName="Pay" Text="שלם על השיעור" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -46,9 +70,38 @@
         <br />
         <asp:Label ID="LabelDeleteMessage" Text="text" runat="server" Height="30px" Width="150px" />
         <br />
+        <hr class="separate" />
         <br />
-        <asp:Button ID="ButtonDeleteLastLessons" runat="server" OnClick="ButtonDeleteLastLessons_Click" Text="מחק העידרויות קודמות" Visible="true" />
-
+        <h2>השיעורים שבחרת לשלם עליהם</h2>
+        <h6>כל השיעורים שמופיעים כאן מיועדים לתשלום</h6>
+        <br />
+        <asp:GridView ID="GridViewLessonstoPay" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None">
+            <AlternatingRowStyle BackColor="White" />
+            <Columns>
+                <asp:BoundField DataField="PaymentStatus" HeaderText="סטטוס תשלום" ReadOnly="True" />
+                <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" ReadOnly="True" />
+                <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" ReadOnly="True" />
+                <asp:BoundField HeaderText="מקום השיעור" DataField="Address" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון תלמיד" DataField="StudentPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם התלמיד" DataField="StudentName" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון מורה" DataField="TeacherPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם המורה" DataField="TeacherName" ReadOnly="True" />
+                <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" ReadOnly="True" />
+                <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
+                <asp:CommandField ButtonType="Button" DeleteText="מחק שיעורים שעליהם משלמים" ShowCancelButton="False" ShowDeleteButton="True" />
+            </Columns>
+            <EditRowStyle BackColor="#2461BF" />
+            <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+            <RowStyle BackColor="#EFF3FB" />
+            <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+            <SortedAscendingCellStyle BackColor="#F5F7FB" />
+            <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+            <SortedDescendingCellStyle BackColor="#E9EBEF" />
+            <SortedDescendingHeaderStyle BackColor="#4870BE" />
+        </asp:GridView>
+        <br />
     </center>
     <br />
 </asp:Content>

@@ -15,6 +15,24 @@ namespace GuyProject
     {
 
         /// <summary>
+        /// DropDownListTeachers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownListTeachers;
+
+        /// <summary>
+        /// DropDownListStudents control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList DropDownListStudents;
+
+        /// <summary>
         /// GridViewShowLessons control.
         /// </summary>
         /// <remarks>
@@ -33,12 +51,12 @@ namespace GuyProject
         protected global::System.Web.UI.WebControls.Label LabelDeleteMessage;
 
         /// <summary>
-        /// ButtonDeleteLastLessons control.
+        /// GridViewLessonstoPay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button ButtonDeleteLastLessons;
+        protected global::System.Web.UI.WebControls.GridView GridViewLessonstoPay;
     }
 }
