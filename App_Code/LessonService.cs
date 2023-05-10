@@ -77,7 +77,7 @@ namespace GuyProject.App_Code
                 myConnection.Close();
             }
         }
-        public DataSet GetAllLessonsByUserID(string teacherID)
+        public DataSet GetAllLessonsByUserID(string userID)
         {
             OleDbCommand cmd = new OleDbCommand("GetAllLessonsByUserID", myConnection);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -85,7 +85,7 @@ namespace GuyProject.App_Code
 
             objParam = cmd.Parameters.Add("TeacherID", OleDbType.BSTR);
             objParam.Direction = ParameterDirection.Input;
-            objParam.Value = teacherID;
+            objParam.Value = userID;
 
             OleDbDataAdapter adapter = new OleDbDataAdapter();
             adapter.SelectCommand = cmd;
@@ -168,6 +168,56 @@ namespace GuyProject.App_Code
             {
                 myConnection.Close();
             }
+        }
+        public DataSet GetAllTeachersNameByStudentID(string studentID)
+        {
+            OleDbCommand cmd = new OleDbCommand("GetAllTeachersNameByStudentID", myConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = cmd.Parameters.Add("StudentID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = studentID;
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            adapter.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+
+            try
+            {
+                adapter.Fill(ds, "TeachersName");
+                ds.Tables["TeachersName"].PrimaryKey = new DataColumn[] { ds.Tables["TeachersName"].Columns["UserName"] };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ds;
+        }
+        public DataSet GetAllStudentsNameByTeacherID(string teacherID)
+        {
+            OleDbCommand cmd = new OleDbCommand("GetAllStudentsNameByTeacherID", myConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = cmd.Parameters.Add("TeacherID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = teacherID;
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            adapter.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+
+            try
+            {
+                adapter.Fill(ds, "StudentsName");
+                //ds.Tables["StudentsName"].PrimaryKey = new DataColumn[] { ds.Tables["StudentsName"].Columns["UserName"] };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ds;
         }
     }
 }
