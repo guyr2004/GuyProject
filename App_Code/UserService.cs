@@ -127,6 +127,31 @@ namespace GuyProject.App_Code
                 myConnection.Close();
             }
         }
+        public string GetUserIDByPhoneNumber(string phone)
+        {
+            OleDbCommand myCommand = new OleDbCommand("GetUserIDByPhone", myConnection);
+            myCommand.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = myCommand.Parameters.Add("Phone", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = phone;
+
+            try
+            {
+                myConnection.Open();
+                object obj = myCommand.ExecuteScalar();
+                return obj == null ? null : obj.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
         public void AddUser(UserDetails userDetails)
         {
             //INSERT INTO UsersTbl ( UserID, firstName, lastName, birthdate, phone, Gender, address, cityID, UserType, Email , userpassword)

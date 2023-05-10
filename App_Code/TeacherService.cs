@@ -122,7 +122,6 @@ namespace GuyProject.App_Code
             }
             return ds;
         }
-
         public DataSet GetTeachersWithoutMe(string teacherID)
         {
             OleDbCommand cmd = new OleDbCommand("GetTeachersWithoutMe", myConnection);

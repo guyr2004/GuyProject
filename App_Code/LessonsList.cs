@@ -40,7 +40,7 @@ namespace GuyProject.App_Code
             }
             return -1;
         }
-        public void AddSubjectLevel(LessonsDetails lessonsDetails)
+        public void AddLesson(LessonsDetails lessonsDetails)
         {
             bool isExist = false;
             for (int i = 0; i < lessonsList.Count; i++)
@@ -61,7 +61,7 @@ namespace GuyProject.App_Code
             int index = SearchLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID);
             lessonslist.Remove(((LessonsDetails)lessonslist[index]));
         }
-        public void UpdateSubjectLevelPrice(LessonsDetails lessonsDetails, string payStatus)
+        public void UpdateStausPayments(LessonsDetails lessonsDetails, string payStatus)
         {
             int index = SearchLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID);
             LessonService lessonService = new LessonService();
