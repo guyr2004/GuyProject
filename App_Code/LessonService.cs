@@ -219,5 +219,45 @@ namespace GuyProject.App_Code
             }
             return ds;
         }
+        public void UpdateLessonPaymentStatus(LessonsDetails lessonsDetails, string paymentStatus)
+        {
+            OleDbCommand myCommand = new OleDbCommand("UpdatePaymentStatus", myConnection);
+            myCommand.CommandType = System.Data.CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = myCommand.Parameters.Add("@PaymentStatus", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = paymentStatus;
+
+            objParam = myCommand.Parameters.Add("@LessonDate", OleDbType.Date);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = lessonsDetails.LessonDate;
+
+            objParam = myCommand.Parameters.Add("@StartHour", OleDbType.DBTime);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = lessonsDetails.StartHour;
+
+            objParam = myCommand.Parameters.Add("@TeacherID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = lessonsDetails.TeacherID;
+
+            objParam = myCommand.Parameters.Add("@StudentID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = lessonsDetails.StudentID;
+
+            try
+            {
+                myConnection.Open();
+                myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
     }
 }
