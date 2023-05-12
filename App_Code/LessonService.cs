@@ -94,7 +94,7 @@ namespace GuyProject.App_Code
             try
             {
                 adapter.Fill(ds, "UserLessons");
-                //ds.Tables["WorkingHoursTbl"].PrimaryKey = new DataColumn[] { ds.Tables["WorkingHoursTbl"].Columns["TeacherID"] };
+                ds.Tables["UserLessons"].PrimaryKey = new DataColumn[] { ds.Tables["UserLessons"].Columns["LessonID"] };
             }
             catch (Exception ex)
             {
