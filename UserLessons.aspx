@@ -75,7 +75,7 @@
         <h2>השיעורים שבחרת לשלם עליהם</h2>
         <h6>כל השיעורים שמופיעים כאן מיועדים לתשלום</h6>
         <br />
-        <asp:GridView ID="GridViewLessonstoPay" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None">
+        <asp:GridView ID="GridViewLessonstoPay" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="GridViewLessonstoPay_RowCommand" >
             <AlternatingRowStyle BackColor="White" />
             <Columns>
                 <asp:BoundField DataField="PaymentStatus" HeaderText="סטטוס תשלום" ReadOnly="True" />
@@ -88,7 +88,7 @@
                 <asp:BoundField HeaderText="שם המורה" DataField="TeacherName" ReadOnly="True" />
                 <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" ReadOnly="True" />
                 <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
-                <asp:CommandField ButtonType="Button" DeleteText="מחק שיעורים שעליהם משלמים" ShowCancelButton="False" ShowDeleteButton="True" />
+                <asp:ButtonField ButtonType="Button" CommandName="DeleteLessonToPay" Text="מחק שיעורים לתשלום" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -101,7 +101,13 @@
             <SortedDescendingCellStyle BackColor="#E9EBEF" />
             <SortedDescendingHeaderStyle BackColor="#4870BE" />
         </asp:GridView>
+        <asp:Label ID="LabelAddLessons" runat="server" Text="Label"></asp:Label>
         <br />
+
     </center>
     <br />
 </asp:Content>
+
+
+
+ 
