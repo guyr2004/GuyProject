@@ -103,7 +103,7 @@
         </asp:GridView>
         <asp:Label ID="LabelAddLessons" runat="server" Text="Label"></asp:Label>
         <br />
-        <asp:Button ID="ButtonSubmitToPay" runat="server" Text="שלם על השיעורים" />
+        <asp:Button ID="ButtonSubmitToPay" runat="server" OnClick="ButtonSubmitToPay_Click" Text="שלם על השיעורים" />
         <br />
 
     </center>

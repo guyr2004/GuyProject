@@ -265,7 +265,7 @@ namespace GuyProject
                 bool lessonExists = false;
                 if (dataSetLessonsNew != null)
                 {
-                     lessonExists = dataSetLessonsNew.Tables["UserLessons"].Select($"LessonID='{lessonID}'").Length > 0;
+                    lessonExists = dataSetLessonsNew.Tables["UserLessons"].Select($"LessonID='{lessonID}'").Length > 0;
                 }
 
                 if (!string.IsNullOrEmpty(dataRow["TeacherName"].ToString()))
@@ -345,6 +345,25 @@ namespace GuyProject
                 Session["dataSetLessonsNew"] = dataSetLessonsNew;
                 Populate_GridViewLessonsToPay(dataSetLessonsNew);
             }
+        }
+        protected void ButtonSubmitToPay_Click(object sender, EventArgs e)
+        {
+            int sumToPay = 0;
+            dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
+            string teacherPhone = "";
+            string teacherName = "";
+            foreach (DataRow row in dataSetLessonsNew.Tables["UserLessons"].Rows)
+            {
+                string moneyPerLesson = row["PricePerHour"].ToString();
+                sumToPay += int.Parse(moneyPerLesson);
+                teacherPhone = row["TeacherPhone"].ToString();
+                teacherName = row["TeacherName"].ToString();
+            }
+            Session["dataSetLessonsNew"] = dataSetLessonsNew;
+            Session["sumToPay"] = sumToPay;
+            Session["teacherPhone"] = teacherPhone;
+            Session["teacherName"] = teacherName;
+            Response.Redirect("Bills.aspx");
         }
     }
 }
