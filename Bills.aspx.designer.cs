@@ -11,7 +11,7 @@ namespace GuyProject
 {
 
 
-    public partial class Bills
+    public partial class Bills1
     {
 
         /// <summary>
