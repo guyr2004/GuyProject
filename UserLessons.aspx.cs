@@ -117,10 +117,6 @@ namespace GuyProject
             UserDetails studentDetails = new UserDetails();
             UserDetails TeacherDetails = new UserDetails();
             DataTable dataTableUserLessons = dataSetUserLessons.Tables["UserLessons"];
-            if (dataTableUserLessons == null)
-            {
-                dataTableUserLessons = dataSetUserLessons.Tables["Table1"];
-            }
             dataTableUserLessons.Columns.Add("TeacherName");
             dataTableUserLessons.Columns.Add("StudentName");
             dataTableUserLessons.Columns.Add("TeacherPhone");
@@ -248,7 +244,6 @@ namespace GuyProject
                 Populate_GridViewShowLessons();
             }
         }
-
         protected void GridViewShowLessons_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Pay")
@@ -285,6 +280,12 @@ namespace GuyProject
                     {
                         if (!lessonExists)
                         {
+                            if (dataRow["PaymentStatus"].ToString() == "שולם")
+                            {
+                                LabelAddLessons.Visible = true;
+                                LabelAddLessons.Text = "לא ניתן להוסיף שורה זו מכיוון שהתשלום כבר בוצע";
+                                return;
+                            }
                             DataRow data = dataSetLessonsNew.Tables["UserLessons"].NewRow();
                             foreach (DataColumn column in dataSetLessonsNew.Tables["UserLessons"].Columns)
                             {
@@ -310,6 +311,12 @@ namespace GuyProject
                 {
                     if (!lessonExists)
                     {
+                        if (dataRow["PaymentStatus"].ToString() == "שולם")
+                        {
+                            LabelAddLessons.Visible = true;
+                            LabelAddLessons.Text = "לא ניתן להוסיף שורה זו מכיוון שהתשלום כבר בוצע";
+                            return;
+                        }
                         DataRow data = dataSetLessonsNew.Tables["UserLessons"].NewRow();
                         foreach (DataColumn column in dataSetLessonsNew.Tables["UserLessons"].Columns)
                         {
@@ -327,13 +334,16 @@ namespace GuyProject
                 }
             }
         }
-
-
         protected void GridViewLessonstoPay_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "DeleteLessonToPay")
             {
-
+                dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
+                int index = Convert.ToInt32(e.CommandArgument);
+                DataRow dataRow = dataSetLessonsNew.Tables["UserLessons"].Rows[index];
+                dataSetLessonsNew.Tables["UserLessons"].Rows.Remove(dataRow);
+                Session["dataSetLessonsNew"] = dataSetLessonsNew;
+                Populate_GridViewLessonsToPay(dataSetLessonsNew);
             }
         }
     }
