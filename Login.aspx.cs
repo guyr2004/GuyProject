@@ -28,6 +28,7 @@ namespace GuyProject
             {
                 UserDetails userDetails = new UserDetails();
                 userDetails = userService.GetUserByUserIDAndUserPassword(this.TextBoxUserID.Text, this.TextBoxUserPassword.Text);
+                Session["phone"] = userDetails.Phone;
                 if (userDetails != null)
                 {
                     this.LabeTextMesage.Visible = true;
