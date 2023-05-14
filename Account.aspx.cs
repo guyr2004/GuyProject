@@ -14,10 +14,10 @@ namespace GuyProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["phone"] == null)
+            if ((string)Session["phone"] == null)
             {
-                Session["page"] = "Account1.aspx";
-                Response.Redirect("WebServiceLogin.aspx");
+                Session["page"] = "Account.aspx";
+                Response.Redirect("Login.aspx");
             }
             string phone = "0526896861";
             Populate_GridViewTransactions(phone);
