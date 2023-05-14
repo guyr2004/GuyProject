@@ -206,7 +206,7 @@ namespace GuyProject
             this.LabelShowHourLesson.Text = this.DropDownListHours.Text;
         }
         protected void ButtonSetLesson_Click(object sender, EventArgs e)
-        {
+        {//להוסיף התתיחחסות לסטטוס תשלום
             try
             {
                 LessonsDetails lessonsDetails = new LessonsDetails();
@@ -221,6 +221,7 @@ namespace GuyProject
                 lessonsDetails.StartHour = TimeSpan.ParseExact(startHour, @"hh\:mm", CultureInfo.InvariantCulture);
                 lessonsDetails.SubjectID = subjectsLevelsService.GetSubjectIDBySubjectName((string)Session["subjectName"]);
                 lessonsDetails.LevelID = subjectsLevelsService.GetLevelIDByLevelName((string)Session["levelID"]);
+                lessonsDetails.PaymentStatus = "לא שולם";
                 if (this.LabelShowLessonPlace.Visible == true)
                     lessonsDetails.Address = this.LabelShowLessonPlace.Text;
                 else
