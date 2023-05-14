@@ -6,16 +6,17 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.OleDb;
+using GuyProject.App_Code;
 
 namespace GuyProject
 {
-    public partial class Account : System.Web.UI.Page
+    public partial class Account1 : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["phone"] == null)
             {
-                Session["page"] = "Account.aspx";
+                Session["page"] = "Account1.aspx";
                 Response.Redirect("WebServiceLogin.aspx");
             }
             string phone = "0526896861";

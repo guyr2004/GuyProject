@@ -245,13 +245,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WebServiceLogin.aspx.cs">
-      <DependentUpon>WebServiceLogin.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebServiceLogin.aspx.designer.cs">
-      <DependentUpon>WebServiceLogin.aspx</DependentUpon>
-    </Compile>
     <Compile Include="WebServiceMasterPage.Master.cs">
       <DependentUpon>WebServiceMasterPage.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -289,7 +282,6 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
-    <Content Include="WebServiceLogin.aspx" />
     <Content Include="WebServiceMasterPage.Master" />
   </ItemGroup>
   <ItemGroup>

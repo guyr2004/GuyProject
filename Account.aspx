@@ -1,8 +1,10 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/WebServiceMasterPage.Master" AutoEventWireup="true" CodeBehind="Account.aspx.cs" Inherits="GuyProject.Account" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Account.aspx.cs" Inherits="GuyProject.Account1" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="title" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
-    <h1>AccountDetails</h1>
+<asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="body" runat="server">
+     <h1>AccountDetails</h1>
     <center>
         <asp:Label ID="LabelUserName" runat="server" Text="Label"></asp:Label>
         <br />
