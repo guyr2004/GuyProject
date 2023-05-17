@@ -206,7 +206,7 @@ namespace GuyProject
             this.LabelShowHourLesson.Text = this.DropDownListHours.Text;
         }
         protected void ButtonSetLesson_Click(object sender, EventArgs e)
-        {//להוסיף התתיחחסות לסטטוס תשלום
+        {
             try
             {
                 LessonsDetails lessonsDetails = new LessonsDetails();
@@ -237,7 +237,10 @@ namespace GuyProject
                 {
                     if (lessonsDetails != null)
                     {
-                        lessonService.InsertNewLesson(lessonsDetails);
+                        if (lessonService.GetLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID) != null)
+                        {
+                            lessonService.InsertNewLesson(lessonsDetails);
+                        }
                         this.DropDownListHours.Items.Remove(this.DropDownListHours.SelectedItem);
                         this.LabelMessageSetLesson.Visible = true;
                         this.LabelMessageSetLesson.Text = "קביעת השיעור עברה בהצלחה";
