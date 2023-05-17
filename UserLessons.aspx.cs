@@ -17,29 +17,34 @@ namespace GuyProject
         DataSet dataSetLessonsNew = new DataSet();
         protected void Page_Load(object sender, EventArgs e)
         {
-
-            if (Session["studentID"] != null && !Page.IsPostBack)
+            bool userIdExist = false;
+            if (Session["teacherID"] != null && Session["studentID"] != null && !Page.IsPostBack && !userIdExist)
             {
+                Session["userID"] = (string)Session["teacherID"];
+                this.DropDownListTeachers.Visible = true;
+                this.DropDownListStudents.Visible = true;
+                Populate_DropDownListStudents();
+                Populate_DropDownListTeachers();
+                userIdExist = true;
+            }
+            if (Session["studentID"] != null && !Page.IsPostBack && !userIdExist)
+            {
+                Session["userID"] = (string)Session["studentID"];
                 Session["userID"] = Session["studentID"];
                 this.DropDownListTeachers.Visible = true;
                 Populate_DropDownListTeachers();
                 this.DropDownListStudents.Visible = false;
+                userIdExist = true;
             }
-            if (Session["teacherID"] != null && !Page.IsPostBack)
+            if (Session["teacherID"] != null && !Page.IsPostBack && !userIdExist)
             {
+                Session["userID"] = (string)Session["teacherID"];
                 Session["userID"] = Session["teacherID"];
                 this.DropDownListStudents.Visible = true;
                 Populate_DropDownListStudents();
                 this.DropDownListTeachers.Visible = false;
             }
-            if (Session["teacherID"] != null && Session["studentID"] != null && !Page.IsPostBack)
-            {
-                this.DropDownListTeachers.Visible = true;
-                this.DropDownListStudents.Visible = true;
-                Populate_DropDownListStudents();
-                Populate_DropDownListTeachers();
-            }
-            if (Session["userID"] == null)
+            if (/*Session["userID"] == null*/ Session["teacherID"] == null && Session["studentID"] == null)
             {
                 Session["page"] = "UserLessons.aspx";
                 Response.Redirect("Login.aspx");
@@ -155,6 +160,7 @@ namespace GuyProject
         {
             this.GridViewLessonstoPay.DataSource = dataSet;
             this.GridViewLessonstoPay.DataBind();
+
         }
         protected void GridViewShowLessons_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
@@ -168,7 +174,7 @@ namespace GuyProject
                 string dateoflesson = dataTable.Tables["UserLessons"].Rows[rowselected]["LessonDate"].ToString();
                 DateTime dateLesson = DateTime.ParseExact(dateoflesson, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture).Date;
                 int difference = dateLesson.Subtract(dateNow).Days;
-                if (difference > 3)//בודק אם תאריך השיעור הוא לא בתווך 3 הימים הקרובים
+                if (difference > 3)//בודק אם תאריך השיעור הוא לא בתווך 3 הימים הקר
                 {
                     lessonsDetails.TeacherID = dataTable.Tables["UserLessons"].Rows[rowselected]["TeacherID"].ToString();
                     lessonsDetails.StudentID = dataTable.Tables["UserLessons"].Rows[rowselected]["StudentID"].ToString();
@@ -246,37 +252,75 @@ namespace GuyProject
         }
         protected void GridViewShowLessons_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Pay")
+            UserService userService = new UserService();
+            DataSet AllUserLessons = new DataSet();
+            AllUserLessons = GetData((DataSet)Session["dataSetLessons"]);
+            string userID = (string)Session["userID"];
+            int index = Convert.ToInt32(e.CommandArgument);
+            GridViewRow row = GridViewShowLessons.Rows[index];
+            string studentID = userService.GetUserIDByPhoneNumber(row.Cells[4].Text);
+            if (studentID == userID)
             {
-                DataSet AllUserLessons = new DataSet();
-                AllUserLessons = GetData((DataSet)Session["dataSetLessons"]);
-                dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
-                if (dataSetLessonsNew == null)
-                {
-                    dataSetLessonsNew = AllUserLessons.Clone();
-                }
-                else
+                if (e.CommandName == "Pay")
                 {
                     dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
-                }
-                int index = Convert.ToInt32(e.CommandArgument);
-                DataRow dataRow = AllUserLessons.Tables["UserLessons"].Rows[index];
-                string lessonID = dataRow["LessonID"].ToString();
-                bool lessonExists = false;
-                if (dataSetLessonsNew != null)
-                {
-                    lessonExists = dataSetLessonsNew.Tables["UserLessons"].Select($"LessonID='{lessonID}'").Length > 0;
-                }
-
-                if (!string.IsNullOrEmpty(dataRow["TeacherName"].ToString()))
-                {
-                    string teacherName = dataRow["TeacherName"].ToString();
-                    bool teacherExists = false;
+                    if (dataSetLessonsNew == null)
+                    {
+                        dataSetLessonsNew = AllUserLessons.Clone();
+                    }
+                    else
+                    {
+                        dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
+                    }
+                    index = Convert.ToInt32(e.CommandArgument);
+                    DataRow dataRow = AllUserLessons.Tables["UserLessons"].Rows[index];
+                    string lessonID = dataRow["LessonID"].ToString();
+                    bool lessonExists = false;
                     if (dataSetLessonsNew != null)
                     {
-                        teacherExists = dataSetLessonsNew.Tables["UserLessons"].Select($"TeacherName='{teacherName}'").Length > 0;
+                        lessonExists = dataSetLessonsNew.Tables["UserLessons"].Select($"LessonID='{lessonID}'").Length > 0;
                     }
-                    if (teacherExists || dataSetLessonsNew.Tables["UserLessons"].Rows.Count == 0)
+
+                    if (!string.IsNullOrEmpty(dataRow["TeacherName"].ToString()))
+                    {
+                        string teacherName = dataRow["TeacherName"].ToString();
+                        bool teacherExists = false;
+                        if (dataSetLessonsNew != null)
+                        {
+                            teacherExists = dataSetLessonsNew.Tables["UserLessons"].Select($"TeacherName='{teacherName}'").Length > 0;
+                        }
+                        if (teacherExists || dataSetLessonsNew.Tables["UserLessons"].Rows.Count == 0)
+                        {
+                            if (!lessonExists)
+                            {
+                                if (dataRow["PaymentStatus"].ToString() == "שולם")
+                                {
+                                    LabelAddLessons.Visible = true;
+                                    LabelAddLessons.Text = "לא ניתן להוסיף שורה זו מכיוון שהתשלום כבר בוצע";
+                                    return;
+                                }
+                                DataRow data = dataSetLessonsNew.Tables["UserLessons"].NewRow();
+                                foreach (DataColumn column in dataSetLessonsNew.Tables["UserLessons"].Columns)
+                                {
+                                    data[column.ColumnName] = dataRow[column.ColumnName];
+                                }
+                                dataSetLessonsNew.Tables["UserLessons"].Rows.Add(data);
+                                Session["dataSetLessonsNew"] = dataSetLessonsNew;
+                                Populate_GridViewLessonsToPay(dataSetLessonsNew);
+                            }
+                            else
+                            {
+                                this.LabelAddLessons.Visible = true;
+                                LabelAddLessons.Text = "השיעור שניסית להוסיף כבר קיים ברשימה לתשלום";
+                            }
+                        }
+                        else
+                        {
+                            this.LabelAddLessons.Visible = true;
+                            LabelAddLessons.Text = "נבחר שיעור של מורה שלא ברשימה עם המורה שנבחר ברשימה";
+                        }
+                    }
+                    else
                     {
                         if (!lessonExists)
                         {
@@ -298,40 +342,15 @@ namespace GuyProject
                         else
                         {
                             this.LabelAddLessons.Visible = true;
-                            LabelAddLessons.Text = "השיעור שניסית להוסיף כבר קיים ברשימה לתשלום";
+                            LabelAddLessons.Text = "השיעור הזה כבר נוסף או שנבחר שיעור שאינו של המורה שכבר נבחר";
                         }
-                    }
-                    else
-                    {
-                        this.LabelAddLessons.Visible = true;
-                        LabelAddLessons.Text = "נבחר שיעור של מורה שלא ברשימה עם המורה שנבחר ברשימה";
                     }
                 }
-                else
-                {
-                    if (!lessonExists)
-                    {
-                        if (dataRow["PaymentStatus"].ToString() == "שולם")
-                        {
-                            LabelAddLessons.Visible = true;
-                            LabelAddLessons.Text = "לא ניתן להוסיף שורה זו מכיוון שהתשלום כבר בוצע";
-                            return;
-                        }
-                        DataRow data = dataSetLessonsNew.Tables["UserLessons"].NewRow();
-                        foreach (DataColumn column in dataSetLessonsNew.Tables["UserLessons"].Columns)
-                        {
-                            data[column.ColumnName] = dataRow[column.ColumnName];
-                        }
-                        dataSetLessonsNew.Tables["UserLessons"].Rows.Add(data);
-                        Session["dataSetLessonsNew"] = dataSetLessonsNew;
-                        Populate_GridViewLessonsToPay(dataSetLessonsNew);
-                    }
-                    else
-                    {
-                        this.LabelAddLessons.Visible = true;
-                        LabelAddLessons.Text = "השיעור הזה כבר נוסף או שנבחר שיעור שאינו של המורה שכבר נבחר";
-                    }
-                }
+            }
+            else
+            {
+                this.LabelAddLessons.Visible = true;
+                this.LabelAddLessons.Text = "לא ניתן לשלם על שיעור שאתה לא התלמיד";
             }
         }
         protected void GridViewLessonstoPay_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -364,6 +383,19 @@ namespace GuyProject
             Session["teacherPhone"] = teacherPhone;
             Session["teacherName"] = teacherName;
             Response.Redirect("Bills.aspx");
+        }
+
+        protected void GridViewLessonstoPay_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.Header &&
+                e.Row.RowType != DataControlRowType.Footer &&
+                e.Row.RowType != DataControlRowType.Pager)
+            {
+                if (Session["teacherID"] == null)
+                {
+                    ((Button)e.Row.Cells[11].FindControl("PayInCash")).Visible = false;
+                }
+            }
         }
     }
 }

@@ -75,7 +75,7 @@
         <h2>השיעורים שבחרת לשלם עליהם</h2>
         <h6>כל השיעורים שמופיעים כאן מיועדים לתשלום</h6>
         <br />
-        <asp:GridView ID="GridViewLessonstoPay" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="GridViewLessonstoPay_RowCommand" >
+        <asp:GridView ID="GridViewLessonstoPay" runat="server" CellPadding="4" ForeColor="#333333" GridLines="None" AutoGenerateColumns="False" OnRowCommand="GridViewLessonstoPay_RowCommand" OnRowDataBound="GridViewLessonstoPay_RowDataBound" >
             <AlternatingRowStyle BackColor="White" />
             <Columns>
                 <asp:BoundField DataField="PaymentStatus" HeaderText="סטטוס תשלום" ReadOnly="True" />
@@ -89,6 +89,7 @@
                 <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" ReadOnly="True" />
                 <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
                 <asp:ButtonField ButtonType="Button" CommandName="DeleteLessonToPay" Text="מחק שיעורים לתשלום" />
+                <asp:ButtonField ButtonType="Button" CommandName="PayInCash" Text="מחק שיעורים ידנית" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />

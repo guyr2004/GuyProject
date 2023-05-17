@@ -24,6 +24,9 @@
         .auto-style10 {
             width: 200px;
         }
+        #ImageTeacher{
+             border-radius: 100px
+        }
     </style>
     <script src="path/to/jquery.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -118,7 +121,7 @@
         </tr>
     </table>
     <br />
-    <br />
+    <br />  
     <div align="center">
         <asp:DataList ID="DataListTeachers" runat="server" OnItemCommand="DataListTeachers_ItemCommand" CellPadding="4" ForeColor="#333333" OnItemDataBound="DataListTeachers_ItemDataBound" DataKeyField="TeacherID">
             <AlternatingItemStyle BackColor="White" />

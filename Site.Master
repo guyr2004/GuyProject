@@ -17,7 +17,7 @@
         <div class="wrapper">
             <div id="myMenu" class="menu" dir="rtl" runat="server">
                 <ul id="menuList">
-                    <%=protectedLink %>
+                    <%=protectedLink%>
                     <li><a href='Account.aspx'>התחבר לחשבון שלי</a></li>
                 </ul>
             </div>

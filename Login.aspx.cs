@@ -28,10 +28,14 @@ namespace GuyProject
             {
                 UserDetails userDetails = new UserDetails();
                 userDetails = userService.GetUserByUserIDAndUserPassword(this.TextBoxUserID.Text, this.TextBoxUserPassword.Text);
-                string phone = userDetails.Phone;
-                Session["phone"] = phone;
                 if (userDetails != null)
                 {
+                    string phone = "";
+                    if (userDetails.Phone != null)
+                    {
+                        phone = userDetails.Phone;
+                    }
+                    Session["phone"] = phone;
                     this.LabeTextMesage.Visible = true;
                     Page.Session["userDetails"] = userDetails;
                     string page = (string)Session["page"];

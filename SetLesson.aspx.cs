@@ -237,7 +237,7 @@ namespace GuyProject
                 {
                     if (lessonsDetails != null)
                     {
-                        if (lessonService.GetLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID) != null)
+                        if (lessonService.GetLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID) == null)
                         {
                             lessonService.InsertNewLesson(lessonsDetails);
                         }
