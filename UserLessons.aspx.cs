@@ -52,7 +52,7 @@ namespace GuyProject
                 Populate_DropDownListStudents();
                 this.DropDownListTeachers.Visible = false;
             }
-            if (/*Session["userID"] == null*/ Session["teacherID"] == null && Session["studentID"] == null)
+            if (Session["teacherID"] == null && Session["studentID"] == null)
             {
                 Session["page"] = "UserLessons.aspx";
                 Response.Redirect("Login.aspx");
@@ -404,7 +404,6 @@ namespace GuyProject
             Session["teacherName"] = teacherName;
             Response.Redirect("Bills.aspx");
         }
-
         protected void GridViewShowLessons_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             GridViewShowLessons.EditIndex = -1;
@@ -432,17 +431,20 @@ namespace GuyProject
         {
             try
             {
-                string paymentStatus = "שולם";
-                DataSet dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
+                UserService userService = new UserService();
+                DataSet dataSetUserLessons = (DataSet)Session["dataSetLessons"];
                 LessonsDetails lessonsDetails = new LessonsDetails();
                 LessonService lessonServiceupdateStatusPayment = new LessonService();
                 int index = Convert.ToInt32(e.RowIndex);
-                GridViewRow row = this.GridViewLessonstoPay.Rows[index];
-
-
+                GridViewRow row = this.GridViewShowLessons.Rows[index];
+                lessonsDetails.LessonDate = ParseDateString(row.Cells[9].Text);
+                lessonsDetails.StartHour = DateTime.ParseExact(row.Cells[8].Text, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
+                lessonsDetails.TeacherID = userService.GetUserIDByPhoneNumber(row.Cells[6].Text);
+                lessonsDetails.StudentID = userService.GetUserIDByPhoneNumber(row.Cells[4].Text);
+                string paymentStatus = ((DropDownList)(row.Cells[1].FindControl("DropDownListPaymentStatus"))).SelectedItem.Text;
                 lessonServiceupdateStatusPayment.UpdateLessonPaymentStatus(lessonsDetails, paymentStatus);
                 GridViewLessonstoPay.EditIndex = -1;
-                Populate_GridViewLessonsToPay(dataSetLessonsNew);
+                Populate_GridViewShowLessons();
                 GridViewLessonstoPay.DataBind();
             }
             catch(Exception Ex)
@@ -450,7 +452,5 @@ namespace GuyProject
                 throw Ex;
             }
         }
-
-
     }
 }

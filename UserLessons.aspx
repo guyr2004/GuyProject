@@ -44,19 +44,17 @@
             <AlternatingRowStyle BackColor="White" />
             <Columns>
                 <asp:TemplateField HeaderText="סטטוס תשלום">
-                    <AlternatingItemTemplate>
-                        <asp:Label ID="LabelStatusPayment" runat="server" DataTextField='<%# Eval("PaymentStatus") %>'></asp:Label>
-                    </AlternatingItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="LabelStatusPayment" runat="server" Text='<%# Eval("PaymentStatus") %>' Visible='<%# !GridViewShowLessons.EditIndex.Equals(Container.DataItemIndex) %>'></asp:Label>
+                    </ItemTemplate>
                     <EditItemTemplate>
-                        <asp:DropDownList ID="DropDownListPaymentStatus" runat="server" AutoPostBack="true" DataTextField='<%# Eval("PaymentStatus") %>'>
+                        <asp:DropDownList ID="DropDownListPaymentStatus" runat="server" AutoPostBack="true" SelectedValue='<%# Eval("PaymentStatus") %>'>
                             <asp:ListItem Value="1">לא שולם</asp:ListItem>
                             <asp:ListItem Value="2">שולם</asp:ListItem>
                         </asp:DropDownList>
                     </EditItemTemplate>
-                    <ItemTemplate>
-                        <asp:Label ID="LabelPayment" runat="server" Text='<%# Bind("PaymentStatus") %>'></asp:Label>
-                    </ItemTemplate>
                 </asp:TemplateField>
+
                 <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" ReadOnly="True" />
                 <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" ReadOnly="True" />
                 <asp:BoundField HeaderText="מקום השיעור" DataField="Address" ReadOnly="True" />
@@ -68,7 +66,7 @@
                 <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
                 <asp:CommandField ButtonType="Button" DeleteText="מחק" ShowCancelButton="False" ShowDeleteButton="True" />
                 <asp:ButtonField ButtonType="Button" CommandName="Pay" Text="שלם על השיעור" />
-                <asp:CommandField ButtonType="Button" CancelText="בטל" EditText="שלם במזומן" InsertVisible="False" ShowEditButton="True" UpdateText="הכנס שקיבלת תשלום במזומן" />
+                <asp:CommandField ButtonType="Button" CancelText="בטל" EditText="הכנס שקיבלת תשלום במזומן" InsertVisible="False" ShowEditButton="True" UpdateText="הכנס שקיבלת תשלום במזומן" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
