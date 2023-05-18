@@ -15,9 +15,17 @@ namespace GuyProject
     public partial class UserLessons : System.Web.UI.Page
     {
         DataSet dataSetLessonsNew = new DataSet();
+        int count = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             bool userIdExist = false;
+            if (Session["teacherID"] != null && Session["studentID"] != null)
+            {
+                if (Session["teacherID"] != Session["studentID"])
+                {
+                    Session["teacherID"] = null;
+                }
+            }
             if (Session["teacherID"] != null && Session["studentID"] != null && !Page.IsPostBack && !userIdExist)
             {
                 Session["userID"] = (string)Session["teacherID"];
@@ -148,39 +156,51 @@ namespace GuyProject
                     row["Price"] = "N/A";
                 }
             }
+            Session["dataSetLessons"] = dataSetUserLessons;
+            count++;
             dataSetUserLessons.AcceptChanges();
             return dataSetUserLessons;
         }
         protected void Populate_GridViewShowLessons()
         {
-            this.GridViewShowLessons.DataSource = GetData((DataSet)Session["dataSetLessons"]);
+            if (count != 1)
+            {
+                this.GridViewShowLessons.DataSource = GetData((DataSet)Session["dataSetLessons"]);
+            }
+            else
+            {
+                this.GridViewShowLessons.DataSource = (DataSet)Session["dataSetLessons"];
+            }
             this.GridViewShowLessons.DataBind();
+
         }
         protected void Populate_GridViewLessonsToPay(DataSet dataSet)
         {
             this.GridViewLessonstoPay.DataSource = dataSet;
             this.GridViewLessonstoPay.DataBind();
-
         }
         protected void GridViewShowLessons_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            DataSet dataTable = GetData((DataSet)Session["dataSetLessons"]);
+            DataSet dataTable = (DataSet)Session["dataSetLessons"];
             try
             {
                 LessonsDetails lessonsDetails = new LessonsDetails();
                 LessonService lessonService = new LessonService();
                 int rowselected = e.RowIndex;
+                DataRow dataRow = dataTable.Tables["UserLessons"].Rows[rowselected];
                 DateTime dateNow = DateTime.Now;
                 string dateoflesson = dataTable.Tables["UserLessons"].Rows[rowselected]["LessonDate"].ToString();
                 DateTime dateLesson = DateTime.ParseExact(dateoflesson, "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture).Date;
                 int difference = dateLesson.Subtract(dateNow).Days;
-                if (difference > 3)//בודק אם תאריך השיעור הוא לא בתווך 3 הימים הקר
+                if (difference > 3 || difference < 0)//בודק אם תאריך השיעור הוא לא בתווך 3 הימים הקר
                 {
                     lessonsDetails.TeacherID = dataTable.Tables["UserLessons"].Rows[rowselected]["TeacherID"].ToString();
                     lessonsDetails.StudentID = dataTable.Tables["UserLessons"].Rows[rowselected]["StudentID"].ToString();
                     lessonsDetails.LessonDate = dateLesson;
                     lessonsDetails.StartHour = DateTime.ParseExact(dataTable.Tables["UserLessons"].Rows[rowselected]["StartHour"].ToString(), "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture).TimeOfDay;
                     lessonService.DeleteLesson(lessonsDetails);
+                    dataTable.Tables["UserLessons"].Rows.Remove(dataRow);
+                    Session["dataSetLessons"] = dataTable;
                     this.LabelDeleteMessage.Visible = true;
                     this.LabelDeleteMessage.Text = "מחיקת השיעור עברה בהצלחה";
                     Populate_GridViewShowLessons();
@@ -385,17 +405,52 @@ namespace GuyProject
             Response.Redirect("Bills.aspx");
         }
 
-        protected void GridViewLessonstoPay_RowDataBound(object sender, GridViewRowEventArgs e)
+        protected void GridViewShowLessons_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            if (e.Row.RowType != DataControlRowType.Header &&
-                e.Row.RowType != DataControlRowType.Footer &&
-                e.Row.RowType != DataControlRowType.Pager)
+            GridViewShowLessons.EditIndex = -1;
+            Populate_GridViewShowLessons();
+            GridViewShowLessons.DataBind();
+        }
+        protected void GridViewShowLessons_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            DataSet dataSet = (DataSet)Session["dataSetLessons"];
+            UserService userService = new UserService();
+            int index = Convert.ToInt32(e.NewEditIndex);
+            GridViewRow row = this.GridViewShowLessons.Rows[index];
+            if ((string)Session["teacherID"] != userService.GetUserIDByPhoneNumber(row.Cells[6].Text))
             {
-                if (Session["teacherID"] == null)
-                {
-                    ((Button)e.Row.Cells[11].FindControl("PayInCash")).Visible = false;
-                }
+                this.LabelDeleteMessage.Visible = true;
+                this.LabelDeleteMessage.Text = "ניתן לשלם למורה במזומן אבל רק הוא יכול לעדכן את הסטטוס";
+            }
+            else
+            {
+                this.GridViewShowLessons.EditIndex = e.NewEditIndex;
+                Populate_GridViewShowLessons();
             }
         }
+        protected void GridViewShowLessons_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            try
+            {
+                string paymentStatus = "שולם";
+                DataSet dataSetLessonsNew = (DataSet)Session["dataSetLessonsNew"];
+                LessonsDetails lessonsDetails = new LessonsDetails();
+                LessonService lessonServiceupdateStatusPayment = new LessonService();
+                int index = Convert.ToInt32(e.RowIndex);
+                GridViewRow row = this.GridViewLessonstoPay.Rows[index];
+
+
+                lessonServiceupdateStatusPayment.UpdateLessonPaymentStatus(lessonsDetails, paymentStatus);
+                GridViewLessonstoPay.EditIndex = -1;
+                Populate_GridViewLessonsToPay(dataSetLessonsNew);
+                GridViewLessonstoPay.DataBind();
+            }
+            catch(Exception Ex)
+            {
+                throw Ex;
+            }
+        }
+
+
     }
 }
