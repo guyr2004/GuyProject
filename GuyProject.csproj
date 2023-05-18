@@ -84,6 +84,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Login.aspx" />
+    <Content Include="Logout.aspx" />
     <Content Include="Register.aspx" />
     <Content Include="SetLesson.aspx" />
     <Content Include="Styles\mainstylesheet.css" />
@@ -149,6 +150,13 @@
     </Compile>
     <Compile Include="Bills.aspx.designer.cs">
       <DependentUpon>Bills.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Logout.aspx.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Logout.aspx.designer.cs">
+      <DependentUpon>Logout.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -245,13 +253,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
-    <Compile Include="WebServiceMasterPage.Master.cs">
-      <DependentUpon>WebServiceMasterPage.Master</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WebServiceMasterPage.Master.designer.cs">
-      <DependentUpon>WebServiceMasterPage.Master</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -282,7 +283,6 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
-    <Content Include="WebServiceMasterPage.Master" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ImagesTeachers\" />

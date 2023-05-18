@@ -18,19 +18,21 @@ namespace GuyProject
             {
                 protectedLink = "<li><a href='HomePage.aspx'>דף הבית</a></li>";
                 protectedLink += "<li><a href ='Register.aspx'>הרשמה</a></li>";
-                protectedLink += "  <li><a href='Login.aspx'>התחברות</a></li>";
+                protectedLink += "<li><a href='Login.aspx'>התחברות</a></li>";
             }
 
             if (Session["studentID"] != null || Session["userID"] != null)
             {
-                protectedLink = "<li><a href='HomePage.aspx'>דף הבית</a></li>";
+                protectedLink = "<li><a href='Logout.aspx'>התנתקות</a></li>";
+                protectedLink += "<li><a href='HomePage.aspx'>דף הבית</a></li>";
                 protectedLink += "<li> <a href='Update.aspx'>עדכון נתונים</a> </li>";
                 protectedLink += "<li> <a href='UserLessons.aspx'>השיעורים שלי</a></li>";
             }
 
             if (Session["teacherID"] != null)
             {
-                protectedLink = "<li><a href='HomePage.aspx'>דף הבית</a></li>";
+                protectedLink = "<li><a href='Logout.aspx'>התנתקות</a></li>";
+                protectedLink += "<li><a href='HomePage.aspx'>דף הבית</a></li>";
                 protectedLink += "<li> <a href='Update.aspx'>עדכון נתונים</a></li>";
                 protectedLink += "<li> <a href='UpdateTeacherDetails.aspx'>עדכון נתוני מורה</a></li>";
                 protectedLink += "<li> <a href='UserLessons.aspx'>השיעורים שלי</a></li>";
@@ -43,6 +45,14 @@ namespace GuyProject
                     protectedLink += "<li> <a href='AdminWebForm.aspx'>עמוד למנהל</a></li>";
                 }
             }
+
+
+
+
+
+
+
+
             //if (Session["teacherID"] != null)
             //{
             //    var additionalItem = new System.Web.UI.HtmlControls.HtmlGenericControl("li");
@@ -67,27 +77,7 @@ namespace GuyProject
             //    }
             //}
         }
-        private Control FindControlRecursive(Control root, string id)
-        {
-            if (root == null)
-            {
-                return null;
-            }
-            if (root.ID == id)
-            {
-                return root;
-            }
-            Control foundControl = null;
-            foreach (Control control in root.Controls)
-            {
-                foundControl = FindControlRecursive(control, id);
-                if (foundControl != null)
-                {
-                    break;
-                }
-            }
-            return foundControl;
-        }
+   
     }
 }
 
