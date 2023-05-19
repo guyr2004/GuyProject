@@ -127,3 +127,24 @@ body {
 .menu {
     direction: rtl;
 }
+
+    .menu select {
+        background-color: rgb(10, 110, 178);
+        color: rgb(243, 243, 243);
+        border: none;
+        border-radius: 5px;
+        padding: 8px;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .menu select:hover {
+            background-color: rgb(14, 79, 114);
+        }
+
+        .menu select option {
+            background-color: rgb(10, 110, 178);
+            color: rgb(243, 243, 243);
+        }
+
