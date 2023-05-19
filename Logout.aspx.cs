@@ -14,7 +14,7 @@ namespace GuyProject
             if (Session["teacherID"] != null || Session["sudentID"] != null)
             {
                 Session["teacherID"] = null;
-                Session["sudentID"] = null;
+                Session["studentID"] = null;
                 Session["userID"] = null;
                 Response.Redirect("HomePage.aspx");
             }
