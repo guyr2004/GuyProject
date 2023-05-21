@@ -40,21 +40,16 @@
         <br />
         <asp:DropDownList ID="DropDownListStudents" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownListStudents_SelectedIndexChanged"></asp:DropDownList>
         <br />
-        <asp:GridView ID="GridViewShowLessons" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridViewShowLessons_RowDeleting" OnRowCommand="GridViewShowLessons_RowCommand" OnRowEditing="GridViewShowLessons_RowEditing" OnRowUpdating="GridViewShowLessons_RowUpdating" OnRowCancelingEdit="GridViewShowLessons_RowCancelingEdit">
+        <br />
+        <asp:DropDownList ID="DropDownListPaymentStatus" runat="server" AutoPostBack="True" OnSelectedIndexChanged="DropDownListPaymentStatus_SelectedIndexChanged">
+            <asp:ListItem>בחר סטטוס</asp:ListItem>
+            <asp:ListItem>שולם</asp:ListItem>
+            <asp:ListItem>לא שולם</asp:ListItem>
+        </asp:DropDownList>
+        <asp:GridView ID="GridViewShowLessons" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowDeleting="GridViewShowLessons_RowDeleting" OnRowCommand="GridViewShowLessons_RowCommand">
             <AlternatingRowStyle BackColor="White" />
             <Columns>
-                <asp:TemplateField HeaderText="סטטוס תשלום">
-                    <ItemTemplate>
-                        <asp:Label ID="LabelStatusPayment" runat="server" Text='<%# Eval("PaymentStatus") %>' Visible='<%# !GridViewShowLessons.EditIndex.Equals(Container.DataItemIndex) %>'></asp:Label>
-                    </ItemTemplate>
-                    <EditItemTemplate>
-                        <asp:DropDownList ID="DropDownListPaymentStatus" runat="server" AutoPostBack="true" SelectedValue='<%# Eval("PaymentStatus") %>'>
-                            <asp:ListItem Value="1">לא שולם</asp:ListItem>
-                            <asp:ListItem Value="2">שולם</asp:ListItem>
-                        </asp:DropDownList>
-                    </EditItemTemplate>
-                </asp:TemplateField>
-
+                <asp:BoundField HeaderText="סטטוס תשלום" DataField="PaymentStatus" ReadOnly="True" />
                 <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" ReadOnly="True" />
                 <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" ReadOnly="True" />
                 <asp:BoundField HeaderText="מקום השיעור" DataField="Address" ReadOnly="True" />
@@ -66,7 +61,6 @@
                 <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
                 <asp:CommandField ButtonType="Button" DeleteText="מחק" ShowCancelButton="False" ShowDeleteButton="True" />
                 <asp:ButtonField ButtonType="Button" CommandName="Pay" Text="שלם על השיעור" />
-                <asp:CommandField ButtonType="Button" CancelText="בטל" EditText="הכנס שקיבלת תשלום במזומן" InsertVisible="False" ShowEditButton="True" UpdateText="הכנס שקיבלת תשלום במזומן" />
             </Columns>
             <EditRowStyle BackColor="#2461BF" />
             <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -81,6 +75,52 @@
         </asp:GridView>
         <br />
         <asp:Label ID="LabelDeleteMessage" Text="text" runat="server" Height="30px" Width="150px" />
+        <br />
+
+        <h6>אלה השיעורים בתור מורה תוכל להזין שקיבלת תשלום במזומן</h6>
+        <asp:DropDownList ID="DropDownListTeacherPamentStatus" runat="server" AutoPostBack="true" OnSelectedIndexChanged="DropDownListTeacherPamentStatus_SelectedIndexChanged">
+            <asp:ListItem>בחר סטטוס</asp:ListItem>
+            <asp:ListItem>שולם</asp:ListItem>
+            <asp:ListItem>לא שולם</asp:ListItem>
+        </asp:DropDownList>
+        <br />
+        <asp:GridView ID="GridViewTeacherLessons" runat="server" AutoGenerateColumns="False" CellPadding="4" ForeColor="#333333" GridLines="None" OnRowCancelingEdit="GridViewTeacherLessons_RowCancelingEdit" OnRowEditing="GridViewTeacherLessons_RowEditing" OnRowUpdating="GridViewTeacherLessons_RowUpdating">
+            <AlternatingRowStyle BackColor="White" />
+            <Columns>
+                <asp:TemplateField HeaderText="סטטוס תשלום">
+                    <ItemTemplate>
+                        <asp:Label ID="LabelStatusPayment" runat="server" Text='<%# Eval("PaymentStatus") %>' Visible='<%# !GridViewShowLessons.EditIndex.Equals(Container.DataItemIndex) %>'></asp:Label>
+                    </ItemTemplate>
+                    <EditItemTemplate>
+                        <asp:DropDownList ID="DropDownListPaymentStatus" runat="server" AutoPostBack="true" SelectedValue='<%# Eval("PaymentStatus") %>'>
+                            <asp:ListItem Value="לא שולם">לא שולם</asp:ListItem>
+                            <asp:ListItem Value="שולם">שולם</asp:ListItem>
+                        </asp:DropDownList>
+                    </EditItemTemplate>
+                </asp:TemplateField>
+
+                <asp:BoundField HeaderText="מחיר השיעור" DataField="Price" ReadOnly="True" />
+                <asp:BoundField DataField="SubjectName" HeaderText="מקצוע לימוד" ReadOnly="True" />
+                <asp:BoundField HeaderText="מקום השיעור" DataField="Address" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון תלמיד" DataField="StudentPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם התלמיד" DataField="StudentName" ReadOnly="True" />
+                <asp:BoundField HeaderText="מספר טלפון מורה" DataField="TeacherPhone" ReadOnly="True" />
+                <asp:BoundField HeaderText="שם המורה" DataField="TeacherName" ReadOnly="True" />
+                <asp:BoundField HeaderText="שעת תחילת השיעור" DataFormatString="{0:hh:mm tt}" DataField="StartHour" ReadOnly="True" />
+                <asp:BoundField HeaderText="תאריך השיעור" DataFormatString="{0:d}" DataField="LessonDate" ReadOnly="True" />
+                <asp:CommandField ButtonType="Button" CancelText="בטל" EditText="הכנס שקיבלת תשלום במזומן" InsertVisible="False" ShowEditButton="True" UpdateText="הכנס שקיבלת תשלום במזומן" />
+            </Columns>
+            <EditRowStyle BackColor="#2461BF" />
+            <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+            <HeaderStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
+            <PagerStyle BackColor="#2461BF" ForeColor="White" HorizontalAlign="Center" />
+            <RowStyle BackColor="#EFF3FB" />
+            <SelectedRowStyle BackColor="#D1DDF1" Font-Bold="True" ForeColor="#333333" />
+            <SortedAscendingCellStyle BackColor="#F5F7FB" />
+            <SortedAscendingHeaderStyle BackColor="#6D95E1" />
+            <SortedDescendingCellStyle BackColor="#E9EBEF" />
+            <SortedDescendingHeaderStyle BackColor="#4870BE" />
+        </asp:GridView>
         <br />
         <hr class="separate" />
         <br />

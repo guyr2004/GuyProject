@@ -33,6 +33,7 @@ namespace GuyProject
                 this.DropDownListStudents.Visible = true;
                 Populate_DropDownListStudents();
                 Populate_DropDownListTeachers();
+                Populate_GridViewTeacherLessons();
                 userIdExist = true;
             }
             if (Session["studentID"] != null && !Page.IsPostBack && !userIdExist)
@@ -50,6 +51,7 @@ namespace GuyProject
                 Session["userID"] = Session["teacherID"];
                 this.DropDownListStudents.Visible = true;
                 Populate_DropDownListStudents();
+                Populate_GridViewTeacherLessons();
                 this.DropDownListTeachers.Visible = false;
             }
             if (Session["teacherID"] == null && Session["studentID"] == null)
@@ -163,16 +165,30 @@ namespace GuyProject
         }
         protected void Populate_GridViewShowLessons()
         {
-            if (count != 1)
+            if (count >= 1)
             {
-                this.GridViewShowLessons.DataSource = GetData((DataSet)Session["dataSetLessons"]);
+                DataSet dataSet = GetData((DataSet)Session["dataSetLessons"]);
+                this.GridViewShowLessons.DataSource = dataSet;
+                Session["dataSetLessons"] = dataSet;
             }
             else
             {
                 this.GridViewShowLessons.DataSource = (DataSet)Session["dataSetLessons"];
             }
-            this.GridViewShowLessons.DataBind();
-
+            if (this.GridViewShowLessons.DataSource != null)
+            {
+                this.GridViewShowLessons.DataBind();
+            }
+        }
+        protected void Populate_GridViewTeacherLessons()
+        {
+            LessonService lessonService = new LessonService();
+            DataSet dataSet = new DataSet();
+            dataSet = lessonService.GetAllTeacherLessonsByTeacherID((string)Session["teacherID"]);
+            dataSet = GetData(dataSet);
+            Session["dataSetTeacherLessons"] = dataSet;
+            this.GridViewTeacherLessons.DataSource = dataSet;
+            this.GridViewTeacherLessons.DataBind();
         }
         protected void Populate_GridViewLessonsToPay(DataSet dataSet)
         {
@@ -404,53 +420,86 @@ namespace GuyProject
             Session["teacherName"] = teacherName;
             Response.Redirect("Bills.aspx");
         }
-        protected void GridViewShowLessons_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        protected void GridViewTeacherLessons_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            GridViewShowLessons.EditIndex = -1;
-            Populate_GridViewShowLessons();
-            GridViewShowLessons.DataBind();
-        }
-        protected void GridViewShowLessons_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-            DataSet dataSet = (DataSet)Session["dataSetLessons"];
-            UserService userService = new UserService();
-            int index = Convert.ToInt32(e.NewEditIndex);
-            GridViewRow row = this.GridViewShowLessons.Rows[index];
-            if ((string)Session["teacherID"] != userService.GetUserIDByPhoneNumber(row.Cells[6].Text))
+            string paymentStatus = this.GridViewTeacherLessons.Rows[e.NewEditIndex].Cells[0].Text;
+            if (paymentStatus != "שולם")
             {
-                this.LabelDeleteMessage.Visible = true;
-                this.LabelDeleteMessage.Text = "ניתן לשלם למורה במזומן אבל רק הוא יכול לעדכן את הסטטוס";
-            }
-            else
-            {
-                this.GridViewShowLessons.EditIndex = e.NewEditIndex;
-                Populate_GridViewShowLessons();
+                this.GridViewTeacherLessons.EditIndex = e.NewEditIndex;
+                Populate_GridViewTeacherLessons();
             }
         }
-        protected void GridViewShowLessons_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        protected void GridViewTeacherLessons_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            GridViewTeacherLessons.EditIndex = -1;
+            Populate_GridViewTeacherLessons();
+            GridViewTeacherLessons.DataBind();
+        }
+        protected void GridViewTeacherLessons_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
             try
             {
+                string payment = "מזומן";
                 UserService userService = new UserService();
                 DataSet dataSetUserLessons = (DataSet)Session["dataSetLessons"];
                 LessonsDetails lessonsDetails = new LessonsDetails();
                 LessonService lessonServiceupdateStatusPayment = new LessonService();
                 int index = Convert.ToInt32(e.RowIndex);
-                GridViewRow row = this.GridViewShowLessons.Rows[index];
+                GridViewRow row = this.GridViewTeacherLessons.Rows[index];
                 lessonsDetails.LessonDate = ParseDateString(row.Cells[9].Text);
                 lessonsDetails.StartHour = DateTime.ParseExact(row.Cells[8].Text, "hh:mm tt", CultureInfo.InvariantCulture).TimeOfDay;
                 lessonsDetails.TeacherID = userService.GetUserIDByPhoneNumber(row.Cells[6].Text);
                 lessonsDetails.StudentID = userService.GetUserIDByPhoneNumber(row.Cells[4].Text);
+                lessonsDetails = lessonServiceupdateStatusPayment.GetLesson(lessonsDetails.LessonDate, lessonsDetails.StartHour, lessonsDetails.TeacherID, lessonsDetails.StudentID);
                 string paymentStatus = ((DropDownList)(row.Cells[1].FindControl("DropDownListPaymentStatus"))).SelectedItem.Text;
                 lessonServiceupdateStatusPayment.UpdateLessonPaymentStatus(lessonsDetails, paymentStatus);
-                GridViewLessonstoPay.EditIndex = -1;
-                Populate_GridViewShowLessons();
-                GridViewLessonstoPay.DataBind();
+                lessonServiceupdateStatusPayment.InsertNewPayment(lessonsDetails.LessonDate, lessonsDetails.StudentID, lessonsDetails.TeacherID, lessonsDetails.PricePerHour, payment);
+                GridViewTeacherLessons.EditIndex = -1;
+                Populate_GridViewTeacherLessons();
+                GridViewTeacherLessons.DataBind();
             }
-            catch(Exception Ex)
+            catch (Exception Ex)
             {
                 throw Ex;
             }
+        }
+        protected void DropDownListPaymentStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataSet dataSet = GetData((DataSet)Session["dataSetLessons"]);
+            DataView dataView = dataSet.Tables[0].DefaultView;
+            string selectedValue = this.DropDownListPaymentStatus.SelectedValue;
+            if (selectedValue == "בחר סטטוס")
+            {
+                dataView = dataSet.Tables[0].DefaultView;
+                this.GridViewShowLessons.DataSource = dataSet;
+            }
+            else
+            {
+                DataSet dataSetSort = new DataSet();
+                dataView.RowFilter = "PaymentStatus = '" + selectedValue + "'";
+                dataSetSort.Tables.Add(dataView.ToTable());
+                this.GridViewShowLessons.DataSource = dataSetSort;
+            }
+            this.GridViewShowLessons.DataBind();
+        }
+        protected void DropDownListTeacherPamentStatus_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DataSet dataSet = (DataSet)Session["dataSetTeacherLessons"];
+            DataView dataView = dataSet.Tables[0].DefaultView;
+            string selectedValue = this.DropDownListTeacherPamentStatus.SelectedValue;
+            if (selectedValue == "בחר סטטוס")
+            {
+                dataView = dataSet.Tables[0].DefaultView;
+                this.GridViewTeacherLessons.DataSource = dataSet;
+            }
+            else
+            {
+                DataSet dataSetSort = new DataSet();
+                dataView.RowFilter = "PaymentStatus = '" + selectedValue + "'";
+                dataSetSort.Tables.Add(dataView.ToTable());
+                this.GridViewTeacherLessons.DataSource = dataSetSort;
+            }
+            this.GridViewTeacherLessons.DataBind();
         }
     }
 }
