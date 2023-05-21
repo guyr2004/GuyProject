@@ -53,6 +53,7 @@ namespace GuyProject
         }
         protected void ButtonPay_Click(object sender, EventArgs e)
         {
+            string payment = "ביט";
             LessonService lessonService = new LessonService();
             LessonsDetails lessonsDetails = new LessonsDetails();
             localhostClientBankService.ClientBankService clientBankService = new localhostClientBankService.ClientBankService();
@@ -78,6 +79,7 @@ namespace GuyProject
                         lessonsDetails.TeacherID = row["TeacherID"].ToString();
                         lessonsDetails.StudentID = row["StudentID"].ToString();
                         lessonService.UpdateLessonPaymentStatus(lessonsDetails, paymentStatus);
+                        lessonService.InsertNewPayment(lessonsDetails.LessonDate, lessonsDetails.StudentID, lessonsDetails.TeacherID, (int)amount, payment);
                     }
                     dataSet.Tables["UserLessons"].Clear();
                 }
