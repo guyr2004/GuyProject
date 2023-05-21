@@ -311,5 +311,72 @@ namespace GuyProject.App_Code
             }
             return lessonsDetails;
         }
+        public DataSet GetAllTeacherLessonsByTeacherID(string userID)
+        {
+            OleDbCommand cmd = new OleDbCommand("GetLessonsByTeacherID", myConnection);
+            cmd.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = cmd.Parameters.Add("TeacherID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = userID;
+
+            OleDbDataAdapter adapter = new OleDbDataAdapter();
+            adapter.SelectCommand = cmd;
+            DataSet ds = new DataSet();
+
+            try
+            {
+                adapter.Fill(ds, "UserLessons");
+                ds.Tables["UserLessons"].PrimaryKey = new DataColumn[] { ds.Tables["UserLessons"].Columns["LessonID"] };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return ds;
+        }
+
+        public void InsertNewPayment(DateTime dateTime, string userID, string teacherID, int amountPaid, string kindPayments)
+        {
+            OleDbCommand myCommand = new OleDbCommand("InsertNewPayment", myConnection);
+            myCommand.CommandType = CommandType.StoredProcedure;
+            OleDbParameter objParam;
+
+            objParam = myCommand.Parameters.Add("DatePayments", OleDbType.Date);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = dateTime;
+
+            objParam = myCommand.Parameters.Add("UserID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = userID;
+
+            objParam = myCommand.Parameters.Add("TeacherID", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = teacherID;
+
+            objParam = myCommand.Parameters.Add("AmountPaid", OleDbType.Integer);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = amountPaid;
+
+            objParam = myCommand.Parameters.Add("KindPayments", OleDbType.BSTR);
+            objParam.Direction = ParameterDirection.Input;
+            objParam.Value = kindPayments;
+
+            int rowAffecteed = 0;
+            try
+            {
+                myConnection.Open();
+                rowAffecteed = myCommand.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                myConnection.Close();
+            }
+        }
     }
 }
