@@ -11,7 +11,7 @@ namespace GuyProject
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["teacherID"] != null || Session["sudentID"] != null)
+            if (Session["teacherID"] != null || Session["sudentID"] != null || Session["userID"] != null)
             {
                 Session["teacherID"] = null;
                 Session["studentID"] = null;

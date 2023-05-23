@@ -15,7 +15,7 @@ namespace GuyProject
     public partial class UserLessons : System.Web.UI.Page
     {
         DataSet dataSetLessonsNew = new DataSet();
-        int count = 0;
+        int count = 1;
         protected void Page_Load(object sender, EventArgs e)
         {
             bool userIdExist = false;
@@ -64,6 +64,7 @@ namespace GuyProject
             Session["dataSetLessons"] = dataSetUserLessons;
             if (!Page.IsPostBack)
             {
+                count = 1;
                 Populate_GridViewShowLessons();
                 this.LabelDeleteMessage.Visible = false;
                 this.LabelAddLessons.Visible = false;
@@ -165,7 +166,7 @@ namespace GuyProject
         }
         protected void Populate_GridViewShowLessons()
         {
-            if (count >= 1)
+            if (count == 1)
             {
                 DataSet dataSet = GetData((DataSet)Session["dataSetLessons"]);
                 this.GridViewShowLessons.DataSource = dataSet;
