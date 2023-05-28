@@ -16,10 +16,13 @@
     <form id="form1" runat="server">
         <div class="wrapper">
             <div id="myMenu" class="menu" dir="rtl" runat="server">
-                <ul id="menuList">
+                <asp:Menu ID="MenuMain" runat="server" Orientation="Horizontal"></asp:Menu>
+                <asp:Menu ID="MenuUpdate" runat="server" Orientation="Horizontal">
+                </asp:Menu>
+                <%--<ul id="menuList">
                     <%=protectedLink%>
                     <li><a href='Account.aspx'>התחבר לחשבון שלי</a></li>
-                </ul>
+                </ul>--%>
             </div>
             <div class="clear"></div>
             <div class="content">

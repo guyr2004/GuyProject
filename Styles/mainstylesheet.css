@@ -37,7 +37,7 @@ body {
     height: 40px;
     color: rgb(243, 243, 243);
     border-radius: 5px;
-    direction: rtl;
+    direction: ltr;
 }
 
 /* navigation styles */
@@ -148,3 +148,39 @@ body {
             color: rgb(243, 243, 243);
         }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(10, 110, 178);
+    font-family: Gisha;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.header h1 {
+    position: relative;
+    top: 0px;
+    left: 0px;
+}
+
+.Title {
+    font-weight: bold;
+}
+
+#MenuMain a.static {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    color: white;
+}
+
+#myMenu{
+    height: auto;
+}
+      
