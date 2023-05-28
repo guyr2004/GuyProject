@@ -126,7 +126,7 @@ namespace GuyProject
                 MenuMain.Items.Add(MenuItemBills);
             }
 
-            if (((string)Session["userID"]) == "214777286")
+            if (((string)Session["teacherID"]) == "214777286")
             {
                 MenuItem MenuItemAdmin = new MenuItem();
                 MenuItemAdmin.Text = "My Working Details";

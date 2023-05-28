@@ -74,7 +74,11 @@ namespace GuyProject
         }
         protected void Populate_DataListWithoutTeacher()
         {
-            this.DataListTeachers.DataSource = GetDataWithoutTeacherDetails();
+            DataSet dataSet = GetDataWithoutTeacherDetails();
+            DataView dataView = dataSet.Tables["TeacherTbl"].DefaultView;
+            string status = "מאושר ";
+            dataView.RowFilter = "Status = '" + status + "'";
+            this.DataListTeachers.DataSource = dataView;
             this.DataListTeachers.DataBind();
 
         }
