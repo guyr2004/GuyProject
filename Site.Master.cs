@@ -67,6 +67,11 @@ namespace GuyProject
                 MenuItemBills.Text = "Bills";
                 MenuItemBills.NavigateUrl = "Bills.aspx";
                 MenuMain.Items.Add(MenuItemBills);
+
+                MenuItem MenuItemAccount = new MenuItem();
+                MenuItemAccount.Text = "Account";
+                MenuItemAccount.NavigateUrl = "Account.aspx";
+                MenuMain.Items.Add(MenuItemAccount);
             }
 
             if (Session["teacherID"] != null)
@@ -124,6 +129,11 @@ namespace GuyProject
                 MenuItemBills.Text = "Bills";
                 MenuItemBills.NavigateUrl = "Bills.aspx";
                 MenuMain.Items.Add(MenuItemBills);
+
+                MenuItem MenuItemAccount = new MenuItem();
+                MenuItemAccount.Text = "Account";
+                MenuItemAccount.NavigateUrl = "Account.aspx";
+                MenuMain.Items.Add(MenuItemAccount);
             }
 
             if (((string)Session["teacherID"]) == "214777286")
